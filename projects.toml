@@ -1,0 +1,47 @@
+[[project]]
+repo = "numpy/numpy"
+role = "upstream"
+
+[[project]]
+repo = "scipy/scipy"
+role = "both"
+
+[[project]]
+repo = "pandas-dev/pandas"
+role = "both"
+
+[[project]]
+repo = "matplotlib/matplotlib"
+role = "both"
+
+[[project]]
+repo = "scikit-learn/scikit-learn"
+role = "downstream"
+
+[[project]]
+repo = "scikit-image/scikit-image"
+role = "downstream"
+
+[[project]]
+repo = "astropy/astropy"
+role = "downstream"
+
+[[project]]
+repo = "pydata/xarray"
+role = "downstream"
+
+[[project]]
+repo = "statsmodels/statsmodels"
+role = "downstream"
+
+[[project]]
+repo = "networkx/networkx"
+role = "downstream"
+
+[[project]]
+repo = "dask/dask"
+role = "downstream"
+
+[[project]]
+repo = "aeon-toolkit/aeon"
+role = "downstream"

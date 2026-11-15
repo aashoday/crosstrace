@@ -7,7 +7,10 @@ name = "crosstrace"
 version = "0.0.1"
 description = "Find the upstream cause of a downstream bug in the scientific Python ecosystem."
 requires-python = ">=3.11"
-dependencies = []
+dependencies = [
+    "httpx>=0.28.1",
+    "python-dotenv>=1.2.4",
+]
 
 [project.optional-dependencies]
 dev = ["pytest", "ruff"]
