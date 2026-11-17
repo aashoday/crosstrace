@@ -31,9 +31,14 @@ class GitHubClient:
         self._cache_dir = Path(cache_dir)
         self._sleep = sleep
 
-    def _request(self, url: str, params: dict | None) -> httpx.Response:
+    def _request(
+        self, url: str, params: dict | None = None, body: dict | None = None
+    ) -> httpx.Response:
         while True:
-            response = self._http.get(url, params=params)
+            if body is None:
+                response = self._http.get(url, params=params)
+            else:
+                response = self._http.post(url, json=body)
             if "retry-after" in response.headers:
                 self._sleep(int(response.headers["retry-after"]) + 1)
                 continue
@@ -74,3 +79,18 @@ class GitHubClient:
 
     def rate_limit(self) -> dict:
         return self._request("/rate_limit", None).json()["resources"]["core"]
+
+    def graphql(self, query: str, variables: dict) -> dict:
+        key = {"query": query, "variables": json.dumps(variables, sort_keys=True)}
+        path = self._cache_path("/graphql", key)
+        if path.exists():
+            return json.loads(path.read_text())["data"]
+        response = self._request(
+            "/graphql", body={"query": query, "variables": variables}
+        )
+        result = response.json()
+        if "errors" in result:
+            raise RuntimeError(result["errors"])
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(result))
+        return result["data"]
