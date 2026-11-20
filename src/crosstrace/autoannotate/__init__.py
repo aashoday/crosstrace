@@ -1,0 +1,1 @@
+"""CrossTrace AutoAnnotator: label issue pairs with an LLM."""
