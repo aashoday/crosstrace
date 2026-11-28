@@ -9,7 +9,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from crosstrace.baselines import bm25, frame_rule
+from crosstrace.baselines import bm25, embedding, frame_rule
 from crosstrace.benchmark import Candidate, Query, Split
 from crosstrace.metrics import DEFAULT_KS, evaluate
 
@@ -39,10 +39,19 @@ def _run_frame_rule(
         {"no_upstream_frame": rule.count_without_upstream_frame(queries)},
     )
 
+def _run_embedding(
+    candidates: Sequence[Candidate], queries: Sequence[Query]
+) -> SystemOutput:
+    encoder = embedding.SentenceTransformerEncoder()
+    cache = embedding.EmbeddingCache("data/embeddings", encoder.name)
+    index = embedding.EmbeddingIndex(candidates, encoder, cache)
+    return SystemOutput(embedding.rank_queries(index, queries), {})
+
 
 SYSTEMS: dict[str, Builder] = {
     "bm25": _run_bm25,
     "frame_rule": _run_frame_rule,
+    "embedding": _run_embedding,
 }
 
 
